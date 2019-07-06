@@ -30,4 +30,15 @@ select m.name,c.score,m.score from chinese as c right join math as m on c.name=m
 select c.name,c.score,m.score from chinese as c inner join math as m on c.name=m.name;
 --outer join
 select c.name,c.score,m.score from chinese as c left join math as m on c.name=m.name union select m.name,c.score,m.score from chinese as c right join math as m on c.name=m.name;
-
+--score
+create table score (name varchar(20), course varchar(20), score int);
+insert into score values("zhangsan", "chinese", 81);
+insert into score values("zhangsan", "english", 72);
+insert into score values("lisi", "chinese", 91);
+insert into score values("lisi", "english", 82);
+insert into score values("wangwu", "chinese", 71);
+insert into score values("wangwu", "english", 62);
+insert into score values("zhaoliu", "chinese", 61);
+insert into score values("zhaoliu", "english", 52);
+--找所有分数不小于80的学生名 | 注意括号不能少
+select s.name from score as s where s.name not in (select name from score where score < 80);
