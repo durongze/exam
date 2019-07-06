@@ -40,5 +40,5 @@ insert into score values("wangwu", "chinese", 71);
 insert into score values("wangwu", "english", 62);
 insert into score values("zhaoliu", "chinese", 61);
 insert into score values("zhaoliu", "english", 52);
---找所有分数不小于80的学生名 | 注意括号不能少
+--找所有分数不小于80的学生名 | 注意括号不能少,且括号内不能为空值
 select s.name from score as s where s.name not in (select name from score where score < 80);
