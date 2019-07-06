@@ -1,4 +1,4 @@
---usage: sudo mysql -uroot < myselect.sql
+--usage: sudo mysql -uroot < myselect.sql | source myselect.sql
 drop database exercise; 
 create database exercise; 
 use exercise;
