@@ -42,3 +42,13 @@ insert into score values("zhaoliu", "chinese", 61);
 insert into score values("zhaoliu", "english", 52);
 --找所有分数不小于80的学生名 | 注意括号不能少,且括号内不能为空值
 select s.name from score as s where s.name not in (select name from score where score < 80);
+--更新指定条目
+update score set score=73 where name = 'zhangsan' and course = 'english';
+--删除表中条目
+insert into score values("xxxx" ,"xxxx", 3333);
+delete from score where name = "xxxx";
+--复制表格式
+create table achievement like score;
+insert into achievement (name, course, score) (select * from score);
+--复制表格式
+create table achievements (select * from score);
