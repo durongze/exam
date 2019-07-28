@@ -1,5 +1,6 @@
 #include <dirent.h>
-#include  <stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
 /*
  *struct dirent {
      ino_t          d_ino;       //Inode number 
@@ -12,7 +13,7 @@
  * */
 int main()
 {
-    int idx = 0;
+    int idx = 0, ret = 0;
     struct dirent* pdir = NULL;
     DIR* handle = opendir(".");
     pdir = readdir(handle);
@@ -24,7 +25,27 @@ int main()
         printf("off:%d,\n", pdir->d_off);       
         printf("reclen:%d,\n", pdir->d_reclen);       
         printf("type:%d,\n", pdir->d_type);       
-        printf("type:%s,\n", pdir->d_name);       
+        printf("name:%s,\n", pdir->d_name);       
+        if (8 == pdir->d_type)
+        {
+            FILE* fp = fopen(pdir->d_name, "r");
+            if (fp != NULL)
+            {
+                ret = fseek(fp, -1, SEEK_END);
+                printf("fseek:%d\n", ret);
+                long fsize = ftell(fp);
+                char* ctx = (char*) malloc(fsize+1);
+                rewind(fp);
+                //ret = fread(ctx, 1, fsize, fp);
+                printf("fread:%d\n", ret);
+                char* s = fgets(ctx, fsize, fp);
+                printf("fgets:%s\n",s);
+            }
+            else
+            {
+                fclose(fp);
+            }
+        }
         pdir = readdir(handle);
     }
     closedir(handle);
