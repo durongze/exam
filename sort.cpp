@@ -47,6 +47,20 @@ void myquicksort(int *arr, int left, int right, int size)
     
 }
 
+void myselectsort(int* arr, int size)
+{
+    int i,j;
+    for (i = 0; i < size; ++i){
+        for (j = i+1; j < size; ++j){
+            if (arr[i] > arr[j]){
+                int tmp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = tmp;
+                dump(arr,i,j,size);
+            }
+        }
+    }
+}
 
 int main(int argc, char** argv)
 {
@@ -59,7 +73,8 @@ int main(int argc, char** argv)
     }
 
     dump(arr, -1, -1, arrLen);
-    myquicksort(arr, 0, 9, arrLen);
+    //myquicksort(arr, 0, 9, arrLen);
+    myselectsort(arr, arrLen);
     dump(arr, -1, -1, arrLen);
 
     return 0;
