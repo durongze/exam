@@ -170,6 +170,7 @@ int ParseLine(const std::string& line, std::vector<std::string>& allCol)
 		std::string element;
 		if (idxTab == -1) {
 			element = line.substr(idxCol, line.length() - idxCol);
+			allCol.push_back(element);
 			break;
 		} else {
 			element = line.substr(idxCol, idxTab - idxCol);
