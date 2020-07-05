@@ -120,4 +120,5 @@ int MainGenLrcByDir()
 		std::ofstream fs(lrcFile);
 		WriteLrcTable(data, fs);
 	}
+	return 0;
 }
