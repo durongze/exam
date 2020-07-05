@@ -70,14 +70,14 @@ int GetMp3TimeLen(const char *file)
 	wchar_t *pCmd = NULL;
 	std::string cmd;
 	
-	cmd += "open ";
+	cmd = "open ";
 	cmd += file;
 	cmd += " alias song";
 	pCmd = char2wchar(cmd.c_str());
 	mciSendString(pCmd, NULL, 0, NULL);
 	delete[] pCmd;
 
-	cmd += "status ";
+	cmd = "status ";
 	cmd += file;
 	cmd += " length";
 	pCmd = char2wchar(cmd.c_str());
