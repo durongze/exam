@@ -232,7 +232,11 @@ int ParseFile(const std::string& file, std::map<int, std::vector<std::string> >&
 	for (std::string line; std::getline(s, line); ++idxRow) {
 		std::vector<std::string> allCol;
 		ParseLine(line, allCol);
-		allData[idxRow] = allCol;
+		if (allCol.size() != 0) {
+			allData[idxRow] = allCol;
+		} else {
+			--idxRow;
+		}
 	}
 
 	return 0;
