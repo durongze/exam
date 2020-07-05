@@ -94,3 +94,32 @@ int GetMp3TimeLen(const char *file)
 
 	return lLength;
 }
+
+int MainGenLrcByDir()
+{
+	std::string datDir = "F:\\music";
+	std::vector<std::string> fileName;
+	ReadFileByDir(datDir,"*.lrc", fileName);
+	std::vector<std::string>::iterator iter;
+	int i = 0;
+	for (iter = fileName.begin(); fileName.end() != iter; iter++, i++)
+	{
+		if (i < 6) {
+			continue;
+		}
+		std::string fName = iter->substr(0, iter->rfind(".lrc"));
+		std::string mp3File = datDir + "\\" + fName + ".mp3";
+		std::string lrcFile = datDir + "\\" + fName + ".lrc";
+		std::map<int, std::vector<std::string> > allData;
+		std::map<int, std::vector<std::string> > data;
+		std::string cmd = "dir";
+		system((cmd + " " + datDir).c_str());
+
+		ParseFile(lrcFile, allData);
+		ShowAllData(allData);
+		int times = GetMp3TimeLen(mp3File.c_str());
+		GenLrcTable(allData, data, times);
+		std::ofstream fs(lrcFile + ".bak");
+		WriteLrcTable(data, fs);
+	}
+}
