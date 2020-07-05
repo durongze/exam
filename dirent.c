@@ -1,6 +1,27 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef _WIN32
+#include <io.h>
+int ReadFileByDir(std::string dirName, std::string fileExt, std::vector<std::string>& files)
+{
+	struct _finddata_t s_file;
+	std::string str = dirName + "\\*" + fileExt;
+	bool withDir = true;
+	intptr_t h_file = _findfirst(str.c_str(), &s_file);
+	if (h_file != static_cast<intptr_t>(-1.0)) {
+		do {
+			if (withDir) {
+				files.push_back(dirName + "\\" + s_file.name);
+			} else {
+				files.push_back(std::string(s_file.name));
+			}
+		} while (_findnext(h_file, &s_file) == 0);
+	}
+	_findclose(h_file);
+	return 0;
+}
+#endif
 /*
  *struct dirent {
      ino_t          d_ino;       //Inode number 
