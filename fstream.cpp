@@ -148,6 +148,50 @@ int TransLine(std::vector<std::string>& allCol, std::vector<T>& col)
 	return 0;
 }
 
+int GenTimeByLine(int Secs, int Lines, int line, int& min, int& sec)
+{
+	float fSecs = (float)Secs / Lines * line;
+	min = fSecs / 60;
+	sec = ((int)fSecs) % 60;
+	return 0;
+}
+
+int GenLrcTable(std::map<int, std::vector<std::string> >& allData, std::map<int, std::vector<std::string> >& data, int Secs)
+{
+	int idxRow;
+	std::map<int, std::vector<std::string> >::iterator iterAllData;
+	for (iterAllData = allData.begin(), idxRow = 0; allData.end() != iterAllData; ++iterAllData, ++idxRow)
+	{
+		std::string time;
+		int min = 0;
+		int sec = 0;
+		GenTimeByLine(Secs, allData.size(), idxRow, min, sec);
+		char buf[3] = { 0 };
+		snprintf(buf, sizeof(buf), "%02d", min);
+		time += "[" + std::string(buf) + ":";
+		snprintf(buf, sizeof(buf), "%02d", sec);
+		time += std::string(buf) + "]";
+		iterAllData->second.insert(iterAllData->second.begin(), time);
+		data[idxRow] = iterAllData->second;
+	}
+	return 0;
+}
+
+int WriteLrcTable(std::map<int, std::vector<std::string> >& data, std::ofstream& fs)
+{
+	std::map<int, std::vector<std::string> >::iterator iterData;
+	for (iterData = data.begin(); iterData != data.end(); ++iterData)
+	{
+		std::vector<std::string>::iterator iterWord;
+		for (iterWord = iterData->second.begin(); iterWord != iterData->second.end(); ++iterWord)
+		{
+			fs << *iterWord << " ";
+		}
+		fs << std::endl;
+	}
+	return 0;
+}
+
 int TransTable(std::map<int, std::vector<std::string> >& allData, std::map<int, std::vector<T> >& data)
 {
 	int idxRow;
