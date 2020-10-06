@@ -177,6 +177,24 @@ int GenLrcTable(std::map<int, std::vector<std::string> >& allData, std::map<int,
 	return 0;
 }
 
+int GenTxtByLrc(const std::string& fileTxt, const std::string& fileLrc)
+{
+	std::map<int, std::vector<std::string> > data;
+	ParseFile(fileLrc, data, ']');
+
+	std::ofstream fs(fileTxt, std::ios::out | std::ios::trunc);
+	std::map<int, std::vector<std::string> >::iterator iterData;
+	for (iterData = data.begin(); iterData != data.end(); ++iterData) {
+		std::vector<std::string>::iterator iterWord;
+		for (iterWord = iterData->second.begin(), ++iterWord; iterWord != iterData->second.end(); ++iterWord)
+		{
+			fs << *iterWord << " ";
+		}
+		fs << std::endl;
+	}
+	return 0;
+}
+
 int WriteLrcTable(std::map<int, std::vector<std::string> >& data, std::ofstream& fs)
 {
 	std::map<int, std::vector<std::string> >::iterator iterData;
