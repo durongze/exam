@@ -8,7 +8,7 @@
 
 using namespace std;
 
-int start_deamon(const char *workdir)
+int start_deamon(const char *workdir, std::ofstream& fout)
 {
     pid_t pid, sid;
     
@@ -16,14 +16,18 @@ int start_deamon(const char *workdir)
     pid = fork();
     if (pid < 0)
     {
+        fout << "pid " << pid << endl;
         exit(-1);
     }
 
     // If we got a good PID, then we can exit the parent process.
     if (pid > 0)
     {
+        fout << "parent pid " << pid << endl;
         exit(-1);
     }
+    
+    fout << "child pid " << pid << endl;
 
     // Change the file mode mask
     umask(0);
@@ -33,6 +37,7 @@ int start_deamon(const char *workdir)
     if (sid < 0)
     {
         // Log any failure
+        fout << "sid " << sid << endl;
         exit(-1);
     }
 
@@ -40,6 +45,7 @@ int start_deamon(const char *workdir)
     if ((chdir(workdir)) < 0)
     {
         // Log any failure
+        fout << "workdir " << workdir << endl;
         exit(-1);
     }
 
@@ -68,28 +74,30 @@ const std::string gen_cmd()
 int main(int argc, char **argv)
 {
     const char *workdir="./";
-    const char *logfile="/var/log/daemon.log";
+    const char *logfile="/tmp/daemon.log";
     struct tm run_tm = *get_cur_time();
 
     // Open any logs here
     ofstream fout(logfile);
     if (!fout)
     {
+        std::cout << logfile << std::endl;
         exit(-1);
     }
     
-    start_deamon(workdir);
+    start_deamon(workdir, fout);
     // The big loop
     while (true)
     {
         struct tm cur_tm = *get_cur_time();
         fout << asctime(&cur_tm) << endl;
         if (run_tm.tm_hour == cur_tm.tm_hour) {
+            fout << gen_cmd().c_str() << endl;
             system(gen_cmd().c_str());
             break;
         }
         sleep(30);
     }
-    cout << "over" << endl;        
+    fout << "over" << endl;        
     return 0;
 }
