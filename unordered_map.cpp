@@ -2,9 +2,18 @@
 #include <iostream>
 #include <unordered_map>
 #include <sstream>
+#include <cstring>
+#include <memory>
+
+class DbBase {
+	public:
+		DbBase(){}
+		~DbBase(){}
+};
+using DbBasePtr = std::shared_ptr<DbBase>;
 
 template<typename D = std::string>
-class DbType {
+class DbType : public DbBase {
 	public:
 		DbType(){}
 		DbType(const D& d):m_d(d){}
@@ -18,6 +27,16 @@ class DbType {
 	private:
 		D m_d;
 };
+
+using DbInt8=DbType<int8_t>;
+using DbInt16=DbType<int16_t>;
+using DbInt32=DbType<int32_t>;
+using DbInt64=DbType<int64_t>;
+using DbUInt8=DbType<uint8_t>;
+using DbUInt16=DbType<uint16_t>;
+using DbUInt32=DbType<uint32_t>;
+using DbUInt64=DbType<uint64_t>;
+using DbString=DbType<std::string>;
 
 template<typename K>
 struct DbHash {
@@ -48,5 +67,7 @@ int main() {
 		m[DbType<std::string>(std::to_string(i))] = DbType<std::string>(std::to_string(i));
 	}
 	m.Dump();
+	DbBasePtr p = std::make_shared<DbString>("xxxxxxxxxx");
+	std::static_pointer_cast<DbString>(p);
 	return 0;	
 }
