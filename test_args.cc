@@ -1,11 +1,14 @@
-#ifdef _MSC_VER
-#include <Windows.h>
-#endif
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <cstdio>
 #include <cstdlib>
+#ifdef _MSC_VER
+#include <Windows.h>
+#define DIR_SEP "\\"
+#else
+#define DIR_SEP "/"
+#endif
 
 void SetCmdRed()
 {
@@ -62,6 +65,9 @@ int gen_script(int argc, char** argv, std::ostream &os)
 {
   int i = 0;
   SetCmdGreen();
+#ifdef _MSC_VER
+  os << "@rem ";
+#endif  
   os << "##########" << __DATE__ << __FILE__ << __TIME__ << ":" << __FUNCTION__ << ":" << std::to_string(__LINE__) << "##########" << std::endl;
   SetCmdDefault();
   for (; i < argc; ++i) {
@@ -89,15 +95,38 @@ int script_main (int argc, char** argv)
   return 0;
 }
 
+int get_dir_name(const char* file, std::string &dirName, std::string &fileName)
+{
+  std::string absFile;
+  if (file == NULL) {
+    return -1;
+  }
+  absFile = file;
+  dirName = absFile.substr(0, absFile.rfind(DIR_SEP));
+  fileName = absFile.substr(absFile.rfind(DIR_SEP) + 1);
+  return 0;
+}
+
 int exec_main (int argc, char** argv)
 {
   int i = 0;
   std::stringstream str_os;
-  str_os << "origin_";
-  for (; i < argc; ++i) {
-    str_os << argv[i] << " ";
+  std::string dirName;
+  std::string fileName;
+
+  get_dir_name(argv[0], dirName, fileName);
+  str_os << dirName << DIR_SEP << "origin_" << fileName;
+  for (i = 1; i < argc; ++i) {
+    str_os << " " << argv[i];
   }
   system(str_os.str().c_str());
+  {
+    SetCmdBlue();
+    std::cout << dirName << std::endl;
+    std::cout << fileName << std::endl;	
+    std::cout << str_os.str().c_str() << std::endl;
+    SetCmdDefault();
+  }
   return 0;
 }
 
